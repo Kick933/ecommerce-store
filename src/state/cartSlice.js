@@ -9,18 +9,18 @@ export const cartSlice = createSlice({
     reducers :{
         add :  (state,action) => {
             // Use product as identifier and count as key.
-            state.products[action.payload] = 1
+            state.products[action.payload.id] = {...action.payload.data,count:1}
         },
         increment: (state,action) => {
-            state.products[action.payload] += 1
+            state.products[action.payload.id].count++
         },
         decrement: (state,action) => {
-            if(state.products[action.payload] > 1){
-                state.products[action.payload] -= 1
+            if(state.products[action.payload.id].count > 1){
+                state.products[action.payload.id].count--
             }else{
-                state.products[action.payload] = 0
+                delete state.products[action.payload.id]
             }
-        }
+        },
     }
 })
 

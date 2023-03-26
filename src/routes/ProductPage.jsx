@@ -2,12 +2,16 @@ import { useSelector } from "react-redux"
 import { useLoaderData } from "react-router"
 import { useDispatch } from "react-redux"
 import { add, increment } from "../state/cartSlice"
+// We can store all the product data in state. However, we will have to handle price change on server side in this case.
+// This is a space and request tradeoff. HAve to be decided for each case.
+
+
 
 export const ProductPage = () => {
     const { product } = useLoaderData()
-    const {cart} = useSelector(state => state)
+    const {products:productInCart} = useSelector(state => state.cart)
     const dispatch = useDispatch()
-    console.log(product)
+    const payload = {id : product.id, data: product}
     return (
         <div className="min-h-screen">
             <div className="grid lg:p-8 my-4 lg:my-8 justify-center justify-items-center lg:grid-cols-5">
@@ -21,14 +25,14 @@ export const ProductPage = () => {
                     <p className="text-xl bg-gray-200 rounded-xl text-center lg:text-start p-2">&#36; {product.price}</p>
                     <p className="text-gray-700">{product.description}</p>
                     {
-                    cart.products[product.id] > 0 ?
+                    productInCart[product.id] != undefined ?
                     (
-                    <div className="flex flex-col lg:flex-row gap-2 lg:gap-8 items-center lg:justify-center">
-                    <button onClick={() => dispatch(increment(product.id))} className="w-40 h-10 hover:text-white hover:bg-indigo-500 active:bg-indigo-500 bg-indigo-300 rounded-md">Increment in cart</button>
-                     <p className="text-indigo-400 text-center">{cart.products[product.id]} in Cart</p>
+                    <div className="flex flex-col lg:flex-row gap-2 lg:gap-8 items-center justify-center lg:justify-start">
+                    <button onClick={() => dispatch(increment(payload))} className="w-40 h-10 hover:text-white hover:bg-indigo-500 active:bg-indigo-500 bg-indigo-300 rounded-md">Add one more</button>
+                     <p className="text-indigo-400 text-center">{productInCart[product.id].count} in Cart</p>
                      </div>
                     )                   
-                    : <button onClick={() => dispatch(add(product.id))} className="w-40 h-10 hover:text-white hover:bg-indigo-500 active:bg-indigo-500 bg-indigo-300 rounded-md">Add to cart</button>
+                    : <button onClick={() => dispatch(add(payload))} className="w-40 h-10 mx-auto lg:mx-0 hover:text-white hover:bg-indigo-500 active:bg-indigo-500 bg-indigo-300 rounded-md">Add to cart</button>
                     }
                 </div>
             </div>
